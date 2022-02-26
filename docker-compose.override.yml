@@ -1,0 +1,22 @@
+version: '3.4'
+
+services:
+  productsapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:5011;http://+:5010
+      - OTEL_EXPORTER_ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+    ports:
+      - "5010:5010"
+      - "5011:5011"
+    volumes:
+      - ./src/Services/Products/Products.Api/certs:/root/.aspnet/https:ro
+
+  basketsapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5012
+      - OTEL_EXPORTER_ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+    ports:
+      - "5012:5012"
+

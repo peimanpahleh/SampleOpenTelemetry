@@ -21,20 +21,8 @@ public class CustomEndpointNameFormatter : IEndpointNameFormatter
     public string Consumer<T>()
         where T : class, IConsumer
     {
-        //const string consumer = "Consumer";
-        const string handler = "Handler";
-
-        var consumerName = typeof(T).Name;
-
-
-        /*if (consumerName.EndsWith(consumer, StringComparison.InvariantCultureIgnoreCase))
-            consumerName = consumerName.Substring(0, consumerName.Length - consumer.Length);*/
-
-        if (consumerName.EndsWith(handler, StringComparison.InvariantCultureIgnoreCase))
-            consumerName = consumerName.Substring(0, consumerName.Length - handler.Length);
-
-        consumerName = consumerName + "Consumer";
-
+        var consumerName = typeof(T).FullName;
+        consumerName = MyCunsomerName(consumerName);
         consumerName = SanitizeName(consumerName);
         return consumerName;
     }
@@ -72,5 +60,22 @@ public class CustomEndpointNameFormatter : IEndpointNameFormatter
     public string SanitizeName(string name)
     {
         return _formatter.SanitizeName(name);
+    }
+
+    private string MyCunsomerName(string fullname)
+    {
+        var newName = fullname.Split('.');
+        var first = newName.First();
+        var last = newName.Last();
+        if (last.EndsWith("Handler"))
+        {
+            last = last.Replace("Handler", "").Trim();
+        }
+        if (last.EndsWith("Consumer"))
+        {
+            last = last.Replace("Consumer", "").Trim();
+        }
+        var res = first + last;
+        return res;
     }
 }

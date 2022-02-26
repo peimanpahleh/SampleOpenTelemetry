@@ -1,0 +1,69 @@
+version: '3.4'
+
+services:
+  productsapi:
+    image: ${DOCKER_REGISTRY-}productsapi
+    build:
+      context: .
+      dockerfile: src/Services/Products/Products.Api/Dockerfile
+
+  basketsapi:
+    image: ${DOCKER_REGISTRY-}basketsapi
+    build:
+      context: .
+      dockerfile: src/Services/Baskets/Baskets.Api/Dockerfile
+
+  # grafana:
+  #   image: grafana/grafana
+  #   ports:
+  #     - 3000:3000
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+      - ./infra/prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+      - "9184:9184"
+
+  # seq:
+  #   image: datalust/seq 
+  #   container_name: seq
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #   ports:
+  #     - 5341:80
+
+  #mongo:
+  #  image: mongo
+  #  ports:
+  #    - 27017:27017
+  #  volumes:
+  #    - mongo:/data/db
+
+  postgresql:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Pass@word
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgredata:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: masstransit/rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+volumes:
+  #mongo:
+  postgredata:
