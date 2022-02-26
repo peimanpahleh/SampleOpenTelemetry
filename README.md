@@ -2,7 +2,7 @@ SampleTelemetry
 
 ## This is just a sample project for testing OpenTelemetry in dotnet
 
- I used this tech stacks for this sample project:
+ I used these tech stacks for this sample project:
 - .net6
 - opentelemetry
 - postgres
